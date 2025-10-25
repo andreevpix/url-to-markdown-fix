@@ -14,26 +14,6 @@ Transform any web content into clean, LLM-ready Markdown with a single API call!
 - **Smart Processing**: OCR for images, transcription for audio, and intelligent content extraction
 - **Simple Integration**: RESTful API with clear error handling and response codes
 
-## 🌐 Live Demo
-
-Try it now at [markdown.nimk.ir](https://markdown.nimk.ir) - Transform any URL into clean Markdown instantly!
-
-### Example 1: Converting a Web Article
-
-```
-GET https://markdown.nimk.ir/https://ask.library.arizona.edu/faq/407985
-```
-
-This will convert the library FAQ article into clean, readable Markdown format.
-
-### Example 2: Converting a YouTube Video
-
-```
-GET https://markdown.nimk.ir/https://www.youtube.com/watch?v=dQw4w9WgXcQ
-```
-
-This will extract the video title, description, and other metadata in Markdown format.
-
 ## Features
 
 - Convert web pages to clean Markdown optimized for LLM processing
