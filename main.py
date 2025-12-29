@@ -18,16 +18,13 @@ logger = logging.getLogger(__name__)
 
 def normalize_url(url: str) -> str:
     """Нормализует URL, восстанавливая протокол если нужно."""
-    # Восстанавливаем протокол: http:/example.com -> http://example.com
-    # Это нужно потому что в URL-пути :// превращается в :/
-    url = re.sub(r'^(https?):/?(?!/)', r'\1://', url)
+    
+    # Заменяем http:/ или http: или http:/// на http:// (любое кол-во слешей -> два)
+    url = re.sub(r'^(https?):/*', r'\1://', url)
     
     # Если протокола нет — добавляем https://
     if not url.startswith(("http://", "https://")):
-        if url.startswith("www."):
-            url = "https://" + url
-        else:
-            url = "https://" + url  # Не добавляем www. — не все сайты его используют
+        url = "https://" + url
     
     return url
 
