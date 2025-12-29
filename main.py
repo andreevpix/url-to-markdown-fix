@@ -16,18 +16,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def normalize_url(url: str) -> str:
-# Fix protocol: http:/example.com -> http://example.com
-url = re.sub(r'^(https?):/?(?!/)', r'\1://', url)
-# Add https:// if no protocol
-if not url.startswith(("http://", "https://")):
-    if url.startswith("www."):
-        url = "https://" + url
-    else:
-        url = "https://" + url
-return url
-
-
 @app.get("/healthz")
 async def healthz():
 return Response(content="ok", media_type="text/plain")
@@ -51,15 +39,21 @@ decoded_url = unquote(url)
 logger.info("Decoded URL: %s", decoded_url)
 
 try:
-    decoded_url = normalize_url(decoded_url)
-    logger.info("Normalized URL: %s", decoded_url)
+    decoded_url = re.sub(r'^(https?):/?(?!/)', r'\1://', decoded_url)
+    if not decoded_url.startswith(("http://", "https://")):
+        if decoded_url.startswith("www."):
+            decoded_url = "https://" + decoded_url
+        else:
+            decoded_url = "https://www." + decoded_url
 
     try:
+
         async def _convert() -> str:
             def _run():
                 instance = MarkItDown()
                 conversion_result = instance.convert(decoded_url)
                 return conversion_result.text_content
+
             return await asyncio.to_thread(_run)
 
         text_content = await asyncio.wait_for(_convert(), timeout=25)
