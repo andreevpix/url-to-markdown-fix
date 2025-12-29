@@ -17,18 +17,14 @@ logger = logging.getLogger(__name__)
 
 
 def normalize_url(url: str) -> str:
-"""Нормализует URL, восстанавливая протокол если нужно."""
-# Восстанавливаем протокол: http:/example.com -> http://example.com
-# Это нужно потому что в URL-пути :// превращается в :/
+# Fix protocol: http:/example.com -> http://example.com
 url = re.sub(r'^(https?):/?(?!/)', r'\1://', url)
-
-# Если протокола нет — добавляем https://
+# Add https:// if no protocol
 if not url.startswith(("http://", "https://")):
     if url.startswith("www."):
         url = "https://" + url
     else:
-        url = "https://" + url  # Не добавляем www. — не все сайты его используют
-
+        url = "https://" + url
 return url
 
 
@@ -64,7 +60,6 @@ try:
                 instance = MarkItDown()
                 conversion_result = instance.convert(decoded_url)
                 return conversion_result.text_content
-
             return await asyncio.to_thread(_run)
 
         text_content = await asyncio.wait_for(_convert(), timeout=25)
